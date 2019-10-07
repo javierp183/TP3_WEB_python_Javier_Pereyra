@@ -1,0 +1,59 @@
+  {% include "head.html" %}
+    <div class="container">
+      <div id="add"><button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#vault-add">Add Secret</button></div>
+      <div id="vault-add" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>Add new item into Vault</h3>
+            </div>
+            <form id="vault" name="add" role="form" action="/vault/add" method="POST">
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="key">Key</label>
+                  <input type="text" name="key" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="value">Value</label>
+                  <input type="text" name="value" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="ttl">TTL</label>
+                  <input type="text" name="ttl" class="form-control">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-success" id="submit">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <br />
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Key</th>
+            <th scope="col">Value</th>
+            <th scope="col">Time to Live</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in request %}
+            <tr>
+              <th>{{ i.key }}</th>
+              <td>{{ i.value }}</td>
+              <td>{{ i.ttl }}</td>
+              <td>
+                <a href="/vault/delete/{{ i.key }}">
+                  <button onClick="window.location.reload();" type="button" class="btn btn-outline-danger">Delete</button>
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% include "foot.html" %}
