@@ -6,3 +6,6 @@ start:
 
 populate:
 	@python populate.py
+
+releasedb:
+	@rm -rf sqlite.db

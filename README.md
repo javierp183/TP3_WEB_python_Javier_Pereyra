@@ -15,3 +15,6 @@ Ensure you have " python3 " installed on your system and execute the following c
 - $Make deps # Install dependencies
 - $Make populate # Populate Vouchers
 - $Make start # Start application
+
+* Disruptive database release:
+- Make releasedb
