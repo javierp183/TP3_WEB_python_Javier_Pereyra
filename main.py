@@ -2,6 +2,7 @@ from bottle import route, run, template
 from database import db,Voucher
 from pony.orm import db_session
 
+""" Main root application - under development"""
 
 @route('/validate/voucher/<number>')
 @db_session

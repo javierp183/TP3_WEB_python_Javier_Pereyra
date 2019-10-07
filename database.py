@@ -2,9 +2,16 @@ from datetime import date
 from pony.orm import *
 from loader import Loader
 
+#Load configuration file
 config = Loader().settings
+
+#Instance Database class
 db = Database()
+
+#Binding credentials
 db.bind(**config['database'],create_db=True)
+
+#SQL lite debug mode
 set_sql_debug(True)
 
 

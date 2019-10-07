@@ -3,3 +3,6 @@ deps:
 
 start:
 	@python main.py
+
+populate:
+	@python populate.py
