@@ -1,0 +1,33 @@
+{% include "head.html" %}
+    <div class="container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Key</th>
+            <th scope="col">Hostname</th>
+            <th scope="col">Token</th>
+            <th scope="col">Time To Live</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in request %}
+            <tr>
+              <th>{{ i.key }}</th>
+              <td>{{ i.hostname }}</td>
+              <td>{{ i.token }}</td>
+              <td>{{ i.ttl }}</td>
+              <td>
+                <a href="/api/v1/validate/allow/{{ i.token }}">
+                  <button onClick="window.location.reload();" type="button" class="btn btn-outline-success">Allow</button>
+                </a>
+                <a href="/api/v1/validate/deny/{{ i.token }}">
+                  <button onClick="window.location.reload();" type="button" class="btn btn-outline-danger">Deny</button>
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% include "foot.html" %}

@@ -1,0 +1,4 @@
+---
+database:
+  provider: sqlite
+  filename: sqlite.db
