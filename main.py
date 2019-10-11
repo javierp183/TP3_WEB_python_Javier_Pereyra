@@ -38,6 +38,7 @@ from bottle import route, run, redirect
 
 # Tables
 from database import Voucher, Producto
+from database import Cliente
 from loader import Loader
 
 # Data compare
@@ -134,7 +135,7 @@ def user_confirm_voucher(voucher, idx):
 
     for i in array:
         if( i.find("Ingrese")):
-            print("Aca metes el insert")
+            Cliente(dni=dni,nombre=nombre,apellido=apellido,email=email,direccion=direccion,ciudad=ciudad,codigoPostal=cp,fechaRegistro="31/10/2020")
         else:
             return "No ingreso todas las opciones"
 
