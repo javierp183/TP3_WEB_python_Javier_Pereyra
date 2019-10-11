@@ -30,6 +30,7 @@
 
 # Database
 from pony.orm import db_session, select
+from pony.orm import commit
 
 # Framework
 from bottle import jinja2_view as view
@@ -41,24 +42,12 @@ from database import Voucher, Producto
 from database import Cliente
 from loader import Loader
 
-# Data compare
-from dataclasses import dataclass 
+# Datetime
+import datetime
 
-# Settings
+# Settings and current time
 settings = Loader().settings
-
-# --------------------------------------------------------------------------- #
-# Helper
-# --------------------------------------------------------------------------- #
-class Confirm:
-    dni = ""
-    nombre = ""
-    apellido = ""
-    email = ""
-    direccion = ""
-    ciudad = ""
-    codigopostal = ""
-
+now = datetime.datetime.now()
 
 # --------------------------------------------------------------------------- #
 # Application Routes
@@ -88,7 +77,59 @@ def validate_voucher_number():
     if Voucher.exists(codigovoucher=str(voucher)):
         code = Voucher.get(codigovoucher=str(voucher)).codigovoucher
         return redirect('/product/{}'.format(code))
-    return redirect('/not_valid')
+    return "Voucher no valido!!!"
+
+
+@route('/usersave', method=["POST"])
+@db_session
+def usersave():
+    array = []
+    now = datetime.datetime.now()
+    dni = request.params.get("dni")
+    nombre = request.params.get("nombre")
+    apellido = request.params.get("apellido")
+    email = request.params.get("email")
+    direccion = request.params.get("dir")
+    ciudad = request.params.get("ciudad")
+    codigopostal = request.params.get("cp")
+    array.append(dni)
+    array.append(nombre)
+    array.append(apellido)
+    array.append(email)
+    array.append(direccion)
+    array.append(ciudad)
+    array.append(codigopostal)
+    array.append(now)
+    print(array)
+
+    c = 0
+    save = 0
+
+    for i in array:
+        if i == "":
+            c = c + 1
+            print("null")
+            if c == 7:
+                return "Faltan completar campos!!!"
+                print("all null")
+                save = 0
+        else:
+            c = c + 1
+            print("not null")
+            if c == 7:
+                print("not all null")
+                save = 1
+            
+            
+    if save == 1:
+        print("Storage user")
+        Cliente(dni=array[0], nombre=array[1],
+                apellido=array[2], email=array[3],
+                direccion=array[4],ciudad=array[5],
+                codigoPostal=array[6],fechaRegistro=str(array[7]))
+        commit()
+        return "Gracias por participar!!!"
+    pass
 
 
 @route('/product/<voucher>')
@@ -96,6 +137,7 @@ def validate_voucher_number():
 @db_session
 def get_all_products(voucher):
     """ Select a Product """
+    print(request.params.get('id'))
     if not voucher:
         return redirect('/')
 
@@ -111,33 +153,8 @@ def get_all_products(voucher):
 @view('confirm.tpl', template_lookup=['views'])
 @db_session
 def user_confirm_voucher(voucher, idx):
-    array = []
-    dni = request.params.get("dni")
-    nombre = request.params.get("nombre")
-    apellido = request.params.get("apellido")
-    email = request.params.get("email")
-    direccion = request.params.get("direccion")
-    ciudad = request.params.get("ciudad")
-    codigopostal = request.params.get("cp")
-    fecha = request.params.get("fecha")
-    vouchers = voucher
-
-    array.append(dni)
-    array.append(nombre)
-    array.append(apellido)
-    array.append(email)
-    array.append(direccion)
-    array.append(ciudad)
-    array.append(codigopostal)
-    array.append(fecha)
-    array.append(vouchers)    
-
-
-    for i in array:
-        if( i.find("Ingrese")):
-            Cliente(dni=dni,nombre=nombre,apellido=apellido,email=email,direccion=direccion,ciudad=ciudad,codigoPostal=cp,fechaRegistro="31/10/2020")
-        else:
-            return "No ingreso todas las opciones"
+    dni = request.params.get('dni')
+    print(dni)
 
     if not voucher and not idx:
         return redirect('/voucher_need_and_id')

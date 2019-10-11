@@ -1,31 +1,31 @@
 {% include "head.tpl" %}
+<h4>Ingrese sus datos personales para participar</h4>
 
-<form action="" id="userdata" method="POST">
-  DNI<br>
-  <input type="text" name="dni" value="Ingrese DNI">
+<form action="/usersave", method="POST">
+  DNI:<br>
+  <input type="text" name="dni">
+</br>
+  NOMBRE:
   <br>
-  Nombre<br>
-  <input type="text" name="nombre" value="Ingrese Nombre">
+  <input type="text" name="nombre">
+</br>
+  APELLIDO:<br>
+  <input type="text" name="apellido">
+</br>
+  EMAIL:<br>
+  <input type="text" name="email">
+</br>
+  DIRECCION:<br>
+  <input type="text" name="dir">
+</br>
+  CIUDAD:<br>
+  <input type="text" name="ciudad">
+</br>
+  CODIGO POSTAL:
   <br>
-  Apellido<br>
-  <input type="text" name="apellido" value="Ingrese Apellido">
-  <br>
-  Email<br>
-  <input type="text" name="email" value="Ingrese Email">
-  <br>
-  Direccion<br>
-  <input type="text" name="direccion" value="Ingrese Direccion">
-  <br>
-  Ciudad<br>
-  <input type="text" name="ciudad" value="Ingrese Ciudad">
-  <br>
-  Codigo Postal<br>
-  <input type="text" name="cp" value="Ingrese Codigo Postal">
-  <br>
-  Acepta terminos y condiciones?
-  <input type="radio" name="terminos" value="1">
-  <br><br>
-  <input type="submit" value="Submit">
+  <input type="text" name="cp">
+</br>
+  <input type="submit" value="Submit" value=" ">
 </form> 
 
 {% include "foot.tpl" %}
