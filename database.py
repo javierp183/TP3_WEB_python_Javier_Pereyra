@@ -40,17 +40,19 @@ from loader import Loader
 # Database
 # --------------------------------------------------------------------------- #
 
+# Load configurations from YML file.
 config = Loader().settings
 
+#Initialize database object and bind configuration
 db = Database()
 db.bind(**config['database']['engine'], create_db=True)
 
-
+#Debug database output
 if config['database']['debug']:
     set_sql_debug(True)
 
 # --------------------------------------------------------------------------- #
-# Tables Schemas
+# Tables Schemas ( objects )
 # --------------------------------------------------------------------------- #
 
 

@@ -1,7 +1,7 @@
 {% include "head.tpl" %}
 <h4>Ingrese sus datos personales para participar</h4>
 
-<form action="/usersave", method="POST">
+<form action="">
   DNI:<br>
   <input type="text" name="dni">
 </br>
@@ -26,6 +26,6 @@
   <input type="text" name="cp">
 </br>
   <input type="submit" value="Submit" value=" ">
-</form> 
+</form>
 
 {% include "foot.tpl" %}

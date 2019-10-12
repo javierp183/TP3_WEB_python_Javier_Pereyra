@@ -37,7 +37,7 @@ from bottle import jinja2_view as view
 from bottle import request
 from bottle import route, run, redirect
 
-# Tables
+# Tables / Objects
 from database import Voucher, Producto
 from database import Cliente
 from loader import Loader
@@ -72,17 +72,31 @@ def main_index(msg=False):
 def validate_voucher_number():
     """ Validate if Voucher Exists """
     voucher = request.params.get('voucher', False)
-    if not voucher:
-        return redirect('/voucher_need')
+
     if Voucher.exists(codigovoucher=str(voucher)):
         code = Voucher.get(codigovoucher=str(voucher)).codigovoucher
-        return redirect('/product/{}'.format(code))
-    return "Voucher no valido!!!"
+        #Validate if Voucher is already in use
+        used_vouchers = []
+        clientes = Cliente.select(lambda c: c)
 
+        # for i in clientes:
+        #     used_vouchers.append(i.vouchers.codigovoucher.distinct())
+        
+        # print(used_vouchers.keys())
+
+        #for i in used_vouchers.keys():
+        #    if voucher == i:
+        #        return "Voucher already used buddy"
+        return redirect('/product/{}'.format(code))
+    return "Voucher no valido, volver a pagina interior e ingrese un Voucher valido!!!"
+
+    if not voucher:
+        return redirect('/voucher_need')
 
 @route('/usersave', method=["POST"])
 @db_session
 def usersave():
+    """ User data save into DB """
     array = []
     now = datetime.datetime.now()
     dni = request.params.get("dni")
@@ -100,9 +114,23 @@ def usersave():
     array.append(ciudad)
     array.append(codigopostal)
     array.append(now)
-    print(array)
 
+    #Get all the objects from database
+    clientes = select(p for p in Cliente)[:]
+    result = {'data': [p.to_dict() for p in clientes]}
+
+    #Get all the objects from DB and confirm if DNI
+    # already exists.
+    for i in result['data']:
+        print(i['dni'])
+        print(array[0])
+        if str(i['dni']) == str(array[0]):
+            return "Master, ya estas registrado!!!"
+
+    #Counter Null spaces
     c = 0
+
+    #Boolean state for input textbox
     save = 0
 
     for i in array:
@@ -122,15 +150,15 @@ def usersave():
             
             
     if save == 1:
-        print("Storage user")
-        Cliente(dni=array[0], nombre=array[1],
-                apellido=array[2], email=array[3],
-                direccion=array[4],ciudad=array[5],
-                codigoPostal=array[6],fechaRegistro=str(array[7]))
+        # Set Cliente
+        micliente = Cliente(dni=array[0], nombre=array[1],
+                    apellido=array[2], email=array[3],
+                    direccion=array[4],ciudad=array[5],
+                    codigoPostal=array[6],fechaRegistro=str(array[7]))
+        #micliente.vouchers = Voucher.get(codigovoucher='d0c16e5f-9f48-451a-9d42-4fc87d9f3cb4')
+        # Commit Cliente in to the DB
         commit()
         return "Gracias por participar!!!"
-    pass
-
 
 @route('/product/<voucher>')
 @view('product.tpl', template_lookup=['views'])
@@ -149,17 +177,79 @@ def get_all_products(voucher):
     return dict(context=result)
 
 
-@route('/confirm/<voucher>/<idx>')
+@route('/confirm/<voucher>/<idx>', method=["GET"])
 @view('confirm.tpl', template_lookup=['views'])
 @db_session
 def user_confirm_voucher(voucher, idx):
-    dni = request.params.get('dni')
-    print(dni)
+    """ User data save into DB """
+    array = []
+    now = datetime.datetime.now()
+    dni = request.params.get("dni")
+    nombre = request.params.get("nombre")
+    apellido = request.params.get("apellido")
+    email = request.params.get("email")
+    direccion = request.params.get("dir")
+    ciudad = request.params.get("ciudad")
+    codigopostal = request.params.get("cp")
+    array.append(dni)
+    array.append(nombre)
+    array.append(apellido)
+    array.append(email)
+    array.append(direccion)
+    array.append(ciudad)
+    array.append(codigopostal)
+    array.append(now)
+
+    #Get all the objects from database
+    clientes = select(p for p in Cliente)[:]
+    result = {'data': [p.to_dict() for p in clientes]}
+
+    #Get all the objects from DB and confirm if DNI
+    # already exists.
+    for i in result['data']:
+        print(i['dni'])
+        print(array[0])
+        if str(i['dni']) == str(array[0]):
+            return "Master, ya estas registrado!!!"
+
+    #Counter Null spaces
+    c = 0
+
+    #Boolean state for input textbox
+    save = 0
+
+    for i in array:
+        if i == "":
+            c = c + 1
+            print("null")
+            if c == 7:
+                return "Faltan completar campos!!!"
+                print("all null")
+                save = 0
+        else:
+            c = c + 1
+            print("not null")
+            if c == 7:
+                print("not all null")
+                save = 1
+
+
+    if save == 1:
+        # Set Cliente
+        micliente = Cliente(dni=array[0], nombre=array[1],
+                    apellido=array[2], email=array[3],
+                    direccion=array[4],ciudad=array[5],
+                    codigoPostal=array[6],fechaRegistro=str(array[7]))
+        #micliente.vouchers = Voucher.get(codigovoucher='d0c16e5f-9f48-451a-9d42-4fc87d9f3cb4')
+        # Commit Cliente in to the DB
+        commit()
+        return "Gracias por participar!!!"
+
 
     if not voucher and not idx:
         return redirect('/voucher_need_and_id')
 
-    result = dict(msg="test")
-    return dict(context=result)
+    data = dict(msg="test")
+    return dict(context=data)
 
 run(**settings['framework'])
