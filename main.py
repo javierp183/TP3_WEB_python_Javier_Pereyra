@@ -165,7 +165,7 @@ def usersave():
 @db_session
 def get_all_products(voucher):
     """ Select a Product """
-    print(request.params.get('id'))
+    
     if not voucher:
         return redirect('/')
 
@@ -181,70 +181,6 @@ def get_all_products(voucher):
 @view('confirm.tpl', template_lookup=['views'])
 @db_session
 def user_confirm_voucher(voucher, idx):
-    """ User data save into DB """
-    array = []
-    now = datetime.datetime.now()
-    dni = request.params.get("dni")
-    nombre = request.params.get("nombre")
-    apellido = request.params.get("apellido")
-    email = request.params.get("email")
-    direccion = request.params.get("dir")
-    ciudad = request.params.get("ciudad")
-    codigopostal = request.params.get("cp")
-    array.append(dni)
-    array.append(nombre)
-    array.append(apellido)
-    array.append(email)
-    array.append(direccion)
-    array.append(ciudad)
-    array.append(codigopostal)
-    array.append(now)
-
-    #Get all the objects from database
-    clientes = select(p for p in Cliente)[:]
-    result = {'data': [p.to_dict() for p in clientes]}
-
-    #Get all the objects from DB and confirm if DNI
-    # already exists.
-    for i in result['data']:
-        print(i['dni'])
-        print(array[0])
-        if str(i['dni']) == str(array[0]):
-            return "Master, ya estas registrado!!!"
-
-    #Counter Null spaces
-    c = 0
-
-    #Boolean state for input textbox
-    save = 0
-
-    for i in array:
-        if i == "":
-            c = c + 1
-            print("null")
-            if c == 7:
-                return "Faltan completar campos!!!"
-                print("all null")
-                save = 0
-        else:
-            c = c + 1
-            print("not null")
-            if c == 7:
-                print("not all null")
-                save = 1
-
-
-    if save == 1:
-        # Set Cliente
-        micliente = Cliente(dni=array[0], nombre=array[1],
-                    apellido=array[2], email=array[3],
-                    direccion=array[4],ciudad=array[5],
-                    codigoPostal=array[6],fechaRegistro=str(array[7]))
-        #micliente.vouchers = Voucher.get(codigovoucher='d0c16e5f-9f48-451a-9d42-4fc87d9f3cb4')
-        # Commit Cliente in to the DB
-        commit()
-        return "Gracias por participar!!!"
-
 
     if not voucher and not idx:
         return redirect('/voucher_need_and_id')
