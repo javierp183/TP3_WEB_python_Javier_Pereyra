@@ -48,12 +48,10 @@ from database import Voucher
 
 @db_session()
 def random_voucher():
-    c = 0
     """ Generate Random Voucher """
-    for _i in range(5):
-        c = c + 1
-        Voucher(id=c, codigovoucher=str(uuid4()),
-                estado=0,fecharegistro='1/1/1', producto=c,cliente=c)
+    for _i in range(10):
+        Voucher(codigovoucher=str(uuid4()),
+                estado=0)
     commit()
 
 
@@ -63,14 +61,14 @@ def productos():
     Producto(
         titulo="Mochila",
         descripcion="Algo para llevar cosas",
-        urlimagen="img/mochila.png")
+        urlimagen="img/mochila.jpg")
     # Commit
     commit()
 
     Producto(
         titulo="Nave",
         descripcion="Algo para que te lleve",
-        urlimagen="img/nave.png")
+        urlimagen="img/nave.jpg")
 
     # Commit
     commit()
@@ -79,6 +77,6 @@ def productos():
 # Sample Database
 # --------------------------------------------------------------------------- #
 
+#Calling functions
 productos()
-#random_voucher()
-
+random_voucher()
