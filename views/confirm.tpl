@@ -1,4 +1,7 @@
 {% include "head.tpl" %}
+
+
+
 <h4>Ingrese sus datos personales para participar</h4>
 
 <form action="/usersave", method="POST">
@@ -25,6 +28,14 @@
   <br>
   <input type="text" name="cp">
 </br>
+  Codigo de Voucher:
+  <br>
+  <input type="text" name="voucher" value="{{context.0}}" readonly>
+  </br>
+  Producto:
+  <br>
+    <input type="text" name="id" value="{{context.1}}" readonly>
+  </br>
   <input type="submit" value="Submit" value=" ">
 </form>
 

@@ -65,26 +65,14 @@
       <main class="mdl-layout__content">
         <div class="demo-blog__posts mdl-grid">
           <div class="mdl-card coffee-pic mdl-cell mdl-cell--8-col">
-            <div class="mdl-card__media mdl-color-text--grey-50">
-              <h3>Validate Voucher</h3>
-            </div>
-            <div class="mdl-card__supporting-text meta mdl-color-text--grey-600">
-              <div class="minilogo"></div>
-              <div>
-                <strong>Start your journy</strong>
-                <form action="/validate", method='POST'>
-                <input type="text" name="voucher">
-                <input type="submit" value="Submit">
-              </form>
-              </div>
-            </div>
-          </div>
-          <div class="mdl-card shopping mdl-cell mdl-cell--12-col">
+
+          <div class="mdl-card on-the-road-again mdl-cell mdl-cell--12-col">
             <div class="mdl-card__media mdl-color-text--grey-50">
           <nav class="demo-nav mdl-cell mdl-cell--12-col">
+            <h3>Wrong Voucher, try again!!!</h3>
             <div class="section-spacer"></div>
-            <a href="entry.html" class="demo-nav__button" title="show more">
-              More
+            <a href="http://localhost:8080" class="demo-nav__button" title="show more">
+              Main Page
               <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                 <i class="material-icons" role="presentation">arrow_forward</i>
               </button>

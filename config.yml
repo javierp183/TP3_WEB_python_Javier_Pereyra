@@ -16,7 +16,7 @@ framework:
   workers: 5
 
 database:
-  debug: false
+  debug: true
   engine:
     provider: sqlite
     filename: sqlite.db

@@ -1,5 +1,3 @@
-{% include "head.tpl" %}
-
 <h1>Seleccione un producto:</h1>
 
 <table>
@@ -23,6 +21,3 @@
 
 
 <h5>Voucher asociado: {{ context.voucher }}</h5>
-
-
-{% include "foot.tpl" %}

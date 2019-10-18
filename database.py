@@ -32,7 +32,7 @@ from datetime import date
 from pony.orm import Database
 from pony.orm import PrimaryKey
 from pony.orm import Optional
-from pony.orm import Set
+from pony.orm import Set,Required
 from pony.orm import set_sql_debug
 from loader import Loader
 
@@ -62,7 +62,7 @@ class Producto(db.Entity):
     titulo = Optional(str, 50)
     descripcion = Optional(str, 250)
     urlimagen = Optional(str, 1000)
-    codigovoucher = Set('Voucher')
+    codigovoucher = Optional('Voucher')
 
 
 class Cliente(db.Entity):
@@ -76,7 +76,7 @@ class Cliente(db.Entity):
     ciudad = Optional(str)
     codigoPostal = Optional(str)
     fechaRegistro = Optional(str)
-    vouchers = Set('Voucher')
+    vouchers = Optional('Voucher')
 
 
 class Voucher(db.Entity):
@@ -84,9 +84,9 @@ class Voucher(db.Entity):
     id = PrimaryKey(int, auto=True)
     codigovoucher = Optional(str)
     estado = Optional(bool)
-    fecharegistro = Optional(date)
-    producto = Set(Producto)
-    cliente = Set(Cliente)
+    fecharegistro = Optional(str)
+    producto = Optional(Producto)
+    cliente = Optional(Cliente)
 
 # --------------------------------------------------------------------------- #
 # Create Tables

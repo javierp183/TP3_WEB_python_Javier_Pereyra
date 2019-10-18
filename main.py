@@ -36,6 +36,7 @@ from pony.orm import commit
 from bottle import jinja2_view as view
 from bottle import request
 from bottle import route, run, redirect
+from bottle import static_file
 
 # Tables / Objects
 from database import Voucher, Producto
@@ -48,6 +49,13 @@ import datetime
 # Settings and current time
 settings = Loader().settings
 now = datetime.datetime.now()
+
+# ------------- #
+# static content
+# ------------- #
+@route('/static/<filepath:path>')
+def server_static(filepath):
+    return static_file(filepath, root='static')
 
 # --------------------------------------------------------------------------- #
 # Application Routes
@@ -66,6 +74,10 @@ def main_index(msg=False):
 
     return result
 
+@route('/errorvoucher')
+@view('errorvoucher.tpl', template_lookup=['views'])
+def error():
+    pass
 
 @route('/validate', method=["POST"])
 @db_session
@@ -76,19 +88,10 @@ def validate_voucher_number():
     if Voucher.exists(codigovoucher=str(voucher)):
         code = Voucher.get(codigovoucher=str(voucher)).codigovoucher
         #Validate if Voucher is already in use
-        used_vouchers = []
-        clientes = Cliente.select(lambda c: c)
-
-        # for i in clientes:
-        #     used_vouchers.append(i.vouchers.codigovoucher.distinct())
-        
-        # print(used_vouchers.keys())
-
-        #for i in used_vouchers.keys():
-        #    if voucher == i:
-        #        return "Voucher already used buddy"
         return redirect('/product/{}'.format(code))
-    return "Voucher no valido, volver a pagina interior e ingrese un Voucher valido!!!"
+    return redirect('/errorvoucher')
+    #return redirect('errorvoucher.html')
+
 
     if not voucher:
         return redirect('/voucher_need')
@@ -106,6 +109,8 @@ def usersave():
     direccion = request.params.get("dir")
     ciudad = request.params.get("ciudad")
     codigopostal = request.params.get("cp")
+    nvoucher = request.params.get("voucher")
+    nidproducto = request.params.get("id")
     array.append(dni)
     array.append(nombre)
     array.append(apellido)
@@ -114,6 +119,9 @@ def usersave():
     array.append(ciudad)
     array.append(codigopostal)
     array.append(now)
+    array.append(nvoucher)
+    array.append(nidproducto)
+
 
     #Get all the objects from database
     clientes = select(p for p in Cliente)[:]
@@ -147,15 +155,18 @@ def usersave():
             if c == 7:
                 print("not all null")
                 save = 1
-            
-            
+          
     if save == 1:
-        # Set Cliente
-        micliente = Cliente(dni=array[0], nombre=array[1],
+        Cliente(dni=array[0], nombre=array[1],
                     apellido=array[2], email=array[3],
                     direccion=array[4],ciudad=array[5],
                     codigoPostal=array[6],fechaRegistro=str(array[7]))
-        #micliente.vouchers = Voucher.get(codigovoucher='d0c16e5f-9f48-451a-9d42-4fc87d9f3cb4')
+        commit()
+        theID = Cliente.get(dni=array[0]).id
+        current_voucher = Voucher.get(codigovoucher=array[8])
+        current_voucher.cliente = theID
+        current_voucher.estado = 1
+        current_voucher.producto = array[9]
         # Commit Cliente in to the DB
         commit()
         return "Gracias por participar!!!"
@@ -181,11 +192,15 @@ def get_all_products(voucher):
 @view('confirm.tpl', template_lookup=['views'])
 @db_session
 def user_confirm_voucher(voucher, idx):
+    
 
     if not voucher and not idx:
         return redirect('/voucher_need_and_id')
 
-    data = dict(msg="test")
+    data = []
+    data.append(voucher)
+    data.append(idx)
+
     return dict(context=data)
 
 run(**settings['framework'])

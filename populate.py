@@ -37,6 +37,10 @@ from pony.orm import db_session
 from database import Producto
 from database import Voucher
 
+# --------------------------------------------------------------------------- #
+# Set Pragma Key ON
+# --------------------------------------------------------------------------- #
+#db.execute("PRAGMA foreign_keys = ON;")
 
 # --------------------------------------------------------------------------- #
 # Populate Database
@@ -44,10 +48,12 @@ from database import Voucher
 
 @db_session()
 def random_voucher():
+    c = 0
     """ Generate Random Voucher """
-    for _i in range(1000):
-        Voucher(codigovoucher=str(uuid4()),
-                estado=0)
+    for _i in range(5):
+        c = c + 1
+        Voucher(id=c, codigovoucher=str(uuid4()),
+                estado=0,fecharegistro='1/1/1', producto=c,cliente=c)
     commit()
 
 
@@ -73,5 +79,6 @@ def productos():
 # Sample Database
 # --------------------------------------------------------------------------- #
 
-random_voucher()
 productos()
+#random_voucher()
+
