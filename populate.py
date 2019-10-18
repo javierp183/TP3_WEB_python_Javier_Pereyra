@@ -59,15 +59,15 @@ def random_voucher():
 def productos():
     """ Sample Products """
     Producto(
-        titulo="Mochila",
-        descripcion="Algo para llevar cosas",
+        titulo="Tech Bag",
+        descripcion="Something to carrey something",
         urlimagen="img/mochila.jpg")
     # Commit
     commit()
 
     Producto(
-        titulo="Nave",
-        descripcion="Algo para que te lleve",
+        titulo="Space Ship",
+        descripcion="A Thing to go to another place",
         urlimagen="img/nave.jpg")
 
     # Commit

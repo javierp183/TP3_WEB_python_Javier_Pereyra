@@ -50,12 +50,37 @@ import datetime
 settings = Loader().settings
 now = datetime.datetime.now()
 
-# ------------- #
-# static content
-# ------------- #
+# --------------------------------------------------------------------------- #
+# Function - Static - Present content
+# --------------------------------------------------------------------------- #
+
 @route('/static/<filepath:path>')
 def server_static(filepath):
     return static_file(filepath, root='static')
+
+# --------------------------------------------------------------------------- #
+# Function - Helpers - Render output
+# --------------------------------------------------------------------------- #
+
+@route('/errorvoucher')
+@view('errorvoucher.tpl', template_lookup=['views'])
+def error():
+    pass
+
+@route('/thanks')
+@view('thanks.tpl', template_lookup=['views'])
+def thanks():
+    pass
+
+@route('/already')
+@view('already_registered.tpl', template_lookup=['views'])
+def thanks():
+    pass
+
+@route('/complete')
+@view('complete_fields.tpl', template_lookup=['views'])
+def complete():
+    pass
 
 # --------------------------------------------------------------------------- #
 # Application Routes
@@ -74,20 +99,6 @@ def main_index(msg=False):
 
     return result
 
-@route('/errorvoucher')
-@view('errorvoucher.tpl', template_lookup=['views'])
-def error():
-    pass
-
-@route('/thanks')
-@view('thanks.tpl', template_lookup=['views'])
-def thanks():
-    pass
-
-@route('/already')
-@view('already_registered.tpl', template_lookup=['views'])
-def thanks():
-    pass
 
 @route('/validate', method=["POST"])
 @db_session
@@ -103,6 +114,7 @@ def validate_voucher_number():
 
     if not voucher:
         return redirect('/voucher_need')
+
 
 @route('/usersave', method=["POST"])
 @db_session
@@ -143,17 +155,14 @@ def usersave():
         if str(i['dni']) == str(array[0]):
             return redirect('/already')
 
-    #Counter Null spaces
+    # Validate Null spaces in textbox.
     c = 0
-
-    #Boolean state for input textbox
     save = 0
-
     for i in array:
         if i == "":
             c = c + 1
             if c == 7:
-                return "Faltan completar campos!!!"
+                return redirect('/complete')
                 save = 0
         else:
             c = c + 1
@@ -179,7 +188,7 @@ def usersave():
 @db_session
 def get_all_products(voucher):
     """ Select a Product """
-    
+   
     if not voucher:
         return redirect('/')
 
@@ -195,7 +204,6 @@ def get_all_products(voucher):
 @view('confirm.tpl', template_lookup=['views'])
 @db_session
 def user_confirm_voucher(voucher, idx):
-    
 
     if not voucher and not idx:
         return redirect('/voucher_need_and_id')

@@ -1,3 +1,5 @@
+Original SQL Tables
+
 CREATE TABLE Productos(
     Id BIGINT NOT NULL IDENTITY (1, 1) PRIMARY KEY,
     Titulo VARCHAR(50) NOT NULL CHECK (LEN(Titulo) > 0),
