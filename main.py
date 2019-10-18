@@ -79,19 +79,27 @@ def main_index(msg=False):
 def error():
     pass
 
+@route('/thanks')
+@view('thanks.tpl', template_lookup=['views'])
+def thanks():
+    pass
+
+@route('/already')
+@view('already_registered.tpl', template_lookup=['views'])
+def thanks():
+    pass
+
 @route('/validate', method=["POST"])
 @db_session
 def validate_voucher_number():
     """ Validate if Voucher Exists """
     voucher = request.params.get('voucher', False)
 
+    # Validate if Voucher exist.
     if Voucher.exists(codigovoucher=str(voucher)):
         code = Voucher.get(codigovoucher=str(voucher)).codigovoucher
-        #Validate if Voucher is already in use
         return redirect('/product/{}'.format(code))
     return redirect('/errorvoucher')
-    #return redirect('errorvoucher.html')
-
 
     if not voucher:
         return redirect('/voucher_need')
@@ -127,13 +135,13 @@ def usersave():
     clientes = select(p for p in Cliente)[:]
     result = {'data': [p.to_dict() for p in clientes]}
 
-    #Get all the objects from DB and confirm if DNI
+    # Get all the objects from DB and confirm if DNI
     # already exists.
     for i in result['data']:
         print(i['dni'])
         print(array[0])
         if str(i['dni']) == str(array[0]):
-            return "Master, ya estas registrado!!!"
+            return redirect('/already')
 
     #Counter Null spaces
     c = 0
@@ -144,24 +152,19 @@ def usersave():
     for i in array:
         if i == "":
             c = c + 1
-            print("null")
             if c == 7:
                 return "Faltan completar campos!!!"
-                print("all null")
                 save = 0
         else:
             c = c + 1
-            print("not null")
             if c == 7:
-                print("not all null")
                 save = 1
           
     if save == 1:
         Cliente(dni=array[0], nombre=array[1],
-                    apellido=array[2], email=array[3],
-                    direccion=array[4],ciudad=array[5],
-                    codigoPostal=array[6],fechaRegistro=str(array[7]))
-        commit()
+                apellido=array[2], email=array[3],
+                direccion=array[4],ciudad=array[5],
+                codigoPostal=array[6],fechaRegistro=str(array[7]))
         theID = Cliente.get(dni=array[0]).id
         current_voucher = Voucher.get(codigovoucher=array[8])
         current_voucher.cliente = theID
@@ -169,7 +172,7 @@ def usersave():
         current_voucher.producto = array[9]
         # Commit Cliente in to the DB
         commit()
-        return "Gracias por participar!!!"
+        return redirect('/thanks')
 
 @route('/product/<voucher>')
 @view('product.tpl', template_lookup=['views'])
