@@ -51,7 +51,7 @@ settings = Loader().settings
 now = datetime.datetime.now()
 
 # --------------------------------------------------------------------------- #
-# Function - Static - Present content
+# Function - Static - Publish content
 # --------------------------------------------------------------------------- #
 
 @route('/static/<filepath:path>')
@@ -182,6 +182,7 @@ def usersave():
         # Commit Cliente in to the DB
         commit()
         return redirect('/thanks')
+
 
 @route('/product/<voucher>')
 @view('product.tpl', template_lookup=['views'])

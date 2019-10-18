@@ -23,3 +23,35 @@
 #  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# ---------------------------------------------------------------------------- #
+# Linux image - Alpine
+# ---------------------------------------------------------------------------- #
+FROM alpine:latest
+
+
+# ---------------------------------------------------------------------------- #
+# Install Application requirements
+# ---------------------------------------------------------------------------- #
+RUN apk add python3
+RUN apk add sqlite
+RUN python3 -m pip install bottle
+RUN python3 -m pip install pony
+RUN python3 -m pip install PyYAML
+RUN python3 -m pip install jinja2
+
+# ---------------------------------------------------------------------------- #
+# Copy Application 
+# ---------------------------------------------------------------------------- #
+COPY . /app
+WORKDIR /app
+
+# ---------------------------------------------------------------------------- #
+# Set default TCP port ( Docker side)
+# ---------------------------------------------------------------------------- #
+EXPOSE 8080
+
+# ---------------------------------------------------------------------------- #
+# Start Application 
+# ---------------------------------------------------------------------------- #
+#CMD ["start.sh"]
